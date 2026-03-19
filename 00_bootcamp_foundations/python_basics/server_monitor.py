@@ -3,7 +3,7 @@
 
 def check_server(server, cpu, mem):
     """Checks the CPU and Memory usage of a server and returns a status message.
-    :rtype: object
+
     """
     if cpu > 80 and mem > 85:
         return "HIGH", f"{server} CPU = {cpu}%  MEMORY = {mem}% - ALERT! System Failure Risk!"
