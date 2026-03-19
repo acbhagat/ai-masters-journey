@@ -1,28 +1,56 @@
 # Server_monitor.py
 # This program monitors the CPU and Memory usage of a server and sends an alert if it exceeds a certain threshold.
 
-servers = ["web-1", "db-1", "cache-1"] # List of servers being monitored
-cpu_usage = [45, 85, 60] # Simulated CPU usage for each server
-memory_usage = [90, 90, 40] # Simulated Memory usage for each server
+def check_server(server, cpu, mem):
+    """Checks the CPU and Memory usage of a server and returns a status message.
+    :rtype: object
+    """
+    if cpu > 80 and mem > 85:
+        return "HIGH", f"{server} CPU = {cpu}%  MEMORY = {mem}% - ALERT! System Failure Risk!"
+    elif cpu > 80 or mem > 85:
+        return "CRITICAL", f"{server} CPU = {cpu}%  MEMORY = {mem}% - ALERT! System has Critical Risk!"
+    elif cpu > 50:
+        return "WARNING", f"{server} CPU = {cpu}% - CPU usage is high."
+    else:
+        return "OK", f"{server} CPU = {cpu}% - CPU usage is normal."
+
+
+servers = ["web-1", "db-1", "cache-1", "web-2"]  # List of servers being monitored
+cpu_usage = [45, 85, 60, 40]  # Simulated CPU usage for each server
+memory_usage = [90, 90, 40, 80]  # Simulated Memory usage for each server
+
+# len() is a built-in function that returns the number of items in a list,
+# which in this case is the number of servers being monitored.
+# total_servers = len(servers)  # Get the total number of servers being monitored.
+
+# Initialize counters for different server statuses
+
+counts = {
+    "HIGH": 0,
+    "CRITICAL": 0,
+    "WARNING": 0,
+    "OK": 0
+}
 
 print("=== Server Monitor ===")
 
-for i in range(len(servers)): # Loop through each server and check its CPU usage
-    server = servers[i] # Get the server name
-    cpu = cpu_usage[i] # Get the CPU usage for the server
-    mem = memory_usage[i] # Get the Memory usage for the server
+# for i in range(len(servers)): # Loop through each server and check its CPU usage
+for server, cpu, mem in zip(servers, cpu_usage,
+                            memory_usage):  # Loop through each server and check its CPU and Memory usage
+    # server = servers[i] # Get the server name
+    # cpu = cpu_usage[i] # Get the CPU usage for the server
+    # mem = memory_usage[i] # Get the Memory usage for the server
 
-    print(f"\nChecking {server}...") # Print the server being checked
+    print(f"\nChecking {server}...")  # Print the server being checked
 
-    if cpu > 80 and mem > 85: # If CPU usage exceeds 80%, and memory 85% then send an alert
-        print(f"HIGH: {server} CPU = {cpu}%  MEMORY = {mem}% - ALERT! System Failure Risk!") # Print alert message
-    elif cpu > 80 or mem > 85: # If CPU usage exceeds 80% or memory usage exceeds 85%, print a Critical warning
-        print(f"CRITICAL: {server} CPU = {cpu}%  MEMORY = {mem}% - ALERT! System has Critical Risk!") # Print warning message
-    elif cpu > 50: # If CPU usage is between 50% and 80%, print a warning
-        print(f"WARNING: {server} CPU = {cpu}% - CPU usage is high.") # Print warning message
-    else: # If CPU usage is 50% or below, print that everything is normal
-        print(f"OK: {server} CPU = {cpu}% - CPU usage is normal.") # Print normal-message
+    status, message = check_server(server, cpu, mem)  # Call the check_server function to get the status and message for the server
 
+    print(f"{status}: {message}")  # Print the status and message for the server
 
+    counts[status] += 1  # Increment the counter for the corresponding status
 
+print(f"\n=== Summary ===")  # Print the summary of server statuses
+print(f"Total Servers: {len(servers)}")  # Print the total number of servers being monitored
 
+for key, value in counts.items():  # Loop through the counts dictionary and print the count for each status
+    print(f"{key}: {value}")
