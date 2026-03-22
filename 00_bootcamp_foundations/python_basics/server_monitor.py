@@ -10,18 +10,14 @@ def check_server(server, cpu, mem):
     elif cpu > 80 or mem > 85:
         return "CRITICAL", f"{server} CPU = {cpu}%  MEMORY = {mem}% - ALERT! System has Critical Risk!"
     elif cpu > 50:
-        return "WARNING", f"{server} CPU = {cpu}% - CPU usage is high."
+        return "WARNING", f"{server} CPU = {cpu}% MEMORY = {mem}% - CPU usage is high but Memory is Normal."
     else:
-        return "OK", f"{server} CPU = {cpu}% - CPU usage is normal."
+        return "OK", f"{server} CPU = {cpu}% MEMORY = {mem} - CPU amd Memory usage is normal."
 
 
 servers = ["web-1", "db-1", "cache-1", "web-2"]  # List of servers being monitored
 cpu_usage = [45, 85, 60, 40]  # Simulated CPU usage for each server
 memory_usage = [90, 90, 40, 80]  # Simulated Memory usage for each server
-
-# len() is a built-in function that returns the number of items in a list,
-# which in this case is the number of servers being monitored.
-# total_servers = len(servers)  # Get the total number of servers being monitored.
 
 # Initialize counters for different server statuses
 
@@ -35,18 +31,11 @@ counts = {
 print("=== Server Monitor ===")
 
 # for i in range(len(servers)): # Loop through each server and check its CPU usage
-for server, cpu, mem in zip(servers, cpu_usage,
-                            memory_usage):  # Loop through each server and check its CPU and Memory usage
-    # server = servers[i] # Get the server name
-    # cpu = cpu_usage[i] # Get the CPU usage for the server
-    # mem = memory_usage[i] # Get the Memory usage for the server
+for server, cpu, mem in zip(servers, cpu_usage, memory_usage):  # Loop through each server and check its CPU and Memory usage
 
     print(f"\nChecking {server}...")  # Print the server being checked
-
     status, message = check_server(server, cpu, mem)  # Call the check_server function to get the status and message for the server
-
     print(f"{status}: {message}")  # Print the status and message for the server
-
     counts[status] += 1  # Increment the counter for the corresponding status
 
 print(f"\n=== Summary ===")  # Print the summary of server statuses
